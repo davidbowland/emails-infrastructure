@@ -134,27 +134,6 @@ Resources:
         - Key: 'created-for'
           Value: 'emails'
 
-  EmailApiUser:
-    Type: AWS::IAM::User
-    Properties:
-      Policies:
-        - PolicyName: !Sub
-            - '${Project}-pipeline'
-            - Project: !FindInMap [EnvironmentMap, !Ref Environment, project]
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 'sts:AssumeRole'
-                Resource:
-                  - !Sub 'arn:aws:iam::${AWS::AccountId}:role/emails-pipeline'
-                  - !Sub 'arn:aws:iam::${AWS::AccountId}:role/emails-pipeline-test'
-      Tags:
-        - Key: 'created-by'
-          Value: 'emails-infrastructure'
-        - Key: 'created-for'
-          Value: 'emails'
-
   InboundServiceUser:
     Type: AWS::IAM::User
     Properties:
