@@ -47,6 +47,8 @@ Resources:
           Value: 'emails-infrastructure'
         - Key: 'created-for'
           Value: 'emails'
+        - Key: 'environment'
+          Value: !Ref Environment
 
   # Deployment roles
 
@@ -76,6 +78,13 @@ Resources:
                   - 'account:*'
                 Resource: '*'
       RoleName: !FindInMap [EnvironmentMap, !Ref Environment, roleNameCloudFormation]
+      Tags:
+        - Key: 'created-by'
+          Value: 'emails-infrastructure'
+        - Key: 'created-for'
+          Value: 'emails'
+        - Key: 'environment'
+          Value: !Ref Environment
 
   PipelineRole:
     Type: AWS::IAM::Role
@@ -112,6 +121,13 @@ Resources:
                   - !Sub 'arn:aws:s3:::${LambdaBucket}/*'
                   - !Sub 'arn:aws:s3:::${LambdaBucket}'
       RoleName: !FindInMap [EnvironmentMap, !Ref Environment, roleNamePipeline]
+      Tags:
+        - Key: 'created-by'
+          Value: 'emails-infrastructure'
+        - Key: 'created-for'
+          Value: 'emails'
+        - Key: 'environment'
+          Value: !Ref Environment
 
   # Deployment users
 
@@ -136,6 +152,8 @@ Resources:
           Value: 'emails-infrastructure'
         - Key: 'created-for'
           Value: 'emails'
+        - Key: 'environment'
+          Value: !Ref Environment
 
   InboundServiceUser:
     Type: AWS::IAM::User
@@ -158,6 +176,8 @@ Resources:
           Value: 'emails-infrastructure'
         - Key: 'created-for'
           Value: 'emails'
+        - Key: 'environment'
+          Value: !Ref Environment
 
   QueueApiUser:
     Type: AWS::IAM::User
@@ -180,6 +200,8 @@ Resources:
           Value: 'emails-infrastructure'
         - Key: 'created-for'
           Value: 'emails'
+        - Key: 'environment'
+          Value: !Ref Environment
 
   QueueServiceUser:
     Type: AWS::IAM::User
@@ -202,3 +224,5 @@ Resources:
           Value: 'emails-infrastructure'
         - Key: 'created-for'
           Value: 'emails'
+        - Key: 'environment'
+          Value: !Ref Environment
