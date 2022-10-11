@@ -46,7 +46,7 @@ Resources:
         - Key: 'created-by'
           Value: 'emails-infrastructure'
         - Key: 'created-for'
-          Value: 'emails'
+          Value: !FindInMap [EnvironmentMap, !Ref Environment, project]
         - Key: 'environment'
           Value: !Ref Environment
 
@@ -82,7 +82,7 @@ Resources:
         - Key: 'created-by'
           Value: 'emails-infrastructure'
         - Key: 'created-for'
-          Value: 'emails'
+          Value: !FindInMap [EnvironmentMap, !Ref Environment, project]
         - Key: 'environment'
           Value: !Ref Environment
 
@@ -125,7 +125,7 @@ Resources:
         - Key: 'created-by'
           Value: 'emails-infrastructure'
         - Key: 'created-for'
-          Value: 'emails'
+          Value: !FindInMap [EnvironmentMap, !Ref Environment, project]
         - Key: 'environment'
           Value: !Ref Environment
 
@@ -151,7 +151,7 @@ Resources:
         - Key: 'created-by'
           Value: 'emails-infrastructure'
         - Key: 'created-for'
-          Value: 'emails'
+          Value: !FindInMap [EnvironmentMap, !Ref Environment, project]
         - Key: 'environment'
           Value: !Ref Environment
 
@@ -175,7 +175,7 @@ Resources:
         - Key: 'created-by'
           Value: 'emails-infrastructure'
         - Key: 'created-for'
-          Value: 'emails'
+          Value: !FindInMap [EnvironmentMap, !Ref Environment, project]
         - Key: 'environment'
           Value: !Ref Environment
 
@@ -199,7 +199,7 @@ Resources:
         - Key: 'created-by'
           Value: 'emails-infrastructure'
         - Key: 'created-for'
-          Value: 'emails'
+          Value: !FindInMap [EnvironmentMap, !Ref Environment, project]
         - Key: 'environment'
           Value: !Ref Environment
 
@@ -223,6 +223,6 @@ Resources:
         - Key: 'created-by'
           Value: 'emails-infrastructure'
         - Key: 'created-for'
-          Value: 'emails'
+          Value: !FindInMap [EnvironmentMap, !Ref Environment, project]
         - Key: 'environment'
           Value: !Ref Environment
