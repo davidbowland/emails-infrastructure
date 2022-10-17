@@ -14,17 +14,81 @@ Parameters:
 Mappings:
   EnvironmentMap:
     prod:
+      domain: dbowland.com
       lambdaBucketName: emails-lambda
       project: emails
       roleNameCloudFormation: emails-cloudformation
       roleNamePipeline: emails-pipeline
     test:
+      domain: bowland.link
       lambdaBucketName: emails-lambda-test
       project: emails-test
       roleNameCloudFormation: emails-cloudformation-test
       roleNamePipeline: emails-pipeline-test
 
 Resources:
+  # Authentication
+
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      AccountRecoverySetting:
+        RecoveryMechanisms:
+          - Name: verified_phone_number
+            Priority: 1
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: true
+      AutoVerifiedAttributes:
+        - phone_number
+      DeviceConfiguration:
+        DeviceOnlyRememberedOnUserPrompt: true
+      MfaConfiguration: 'OFF'
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 12
+          RequireLowercase: false
+          RequireNumbers: false
+          RequireSymbols: false
+          RequireUppercase: false
+          TemporaryPasswordValidityDays: 14
+      SmsAuthenticationMessage: Your authentication code is {####}.
+      SmsConfiguration:
+        SnsCallerArn: !Sub '${CognitoSmsRole.Arn}'
+      SmsVerificationMessage: Your verification code is {####}.
+      UsernameConfiguration:
+        CaseSensitive: false
+      UserPoolName: !FindInMap [EnvironmentMap, !Ref Environment, project]
+      UserPoolTags:
+        'created-by': 'emails-infrastructure'
+        'created-for': 'emails'
+        'environment': !Ref Environment
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      AccessTokenValidity: 1 # Hours
+      AllowedOAuthFlows:
+        - implicit
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthScopes:
+        - phone
+        - openid
+        - aws.cognito.signin.user.admin
+      CallbackURLs:
+        - !Sub
+          - 'https://emails.${Domain}'
+          - Domain: !FindInMap [EnvironmentMap, !Ref Environment, domain]
+      IdTokenValidity: 1 # Hours
+      LogoutURLs:
+        - !Sub
+          - 'https://emails.${Domain}'
+          - Domain: !FindInMap [EnvironmentMap, !Ref Environment, domain]
+      PreventUserExistenceErrors: ENABLED
+      RefreshTokenValidity: 30 # Days
+      SupportedIdentityProviders:
+        - COGNITO
+      UserPoolId: !Ref UserPool
+
   # Deployment storage
 
   LambdaBucket:
@@ -51,6 +115,36 @@ Resources:
           Value: !Ref Environment
 
   # Deployment roles
+
+  CognitoSmsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - cognito-idp.amazonaws.com
+            Action: 'sts:AssumeRole'
+      PermissionsBoundary: !Sub 'arn:aws:iam::${AWS::AccountId}:policy/root-boundary'
+      Policies:
+        - PolicyName: !Sub
+            - '${Project}-cognito'
+            - Project: !FindInMap [EnvironmentMap, !Ref Environment, project]
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'sns:publish'
+                Resource: '*'
+      Tags:
+        - Key: 'created-by'
+          Value: 'emails-infrastructure'
+        - Key: 'created-for'
+          Value: 'emails'
+        - Key: 'environment'
+          Value: !Ref Environment
 
   CloudFormationRole:
     Type: AWS::IAM::Role
