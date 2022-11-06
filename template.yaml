@@ -42,7 +42,10 @@ Resources:
         - phone_number
       DeviceConfiguration:
         DeviceOnlyRememberedOnUserPrompt: true
-      MfaConfiguration: 'OFF'
+      EnabledMfas:
+        - SMS_MFA
+        - SOFTWARE_TOKEN_MFA
+      MfaConfiguration: OPTIONAL
       Policies:
         PasswordPolicy:
           MinimumLength: 12
@@ -53,6 +56,7 @@ Resources:
           TemporaryPasswordValidityDays: 14
       SmsAuthenticationMessage: Your authentication code is {####}.
       SmsConfiguration:
+        ExternalId: 'emails-sms-id'
         SnsCallerArn: !Sub '${CognitoSmsRole.Arn}'
       SmsVerificationMessage: Your verification code is {####}.
       UsernameConfiguration:
@@ -246,6 +250,9 @@ Resources:
               Service:
                 - cognito-idp.amazonaws.com
             Action: 'sts:AssumeRole'
+            Condition:
+              StringEquals:
+                'sts:ExternalId': 'emails-sms-id'
       PermissionsBoundary: !Sub 'arn:aws:iam::${AWS::AccountId}:policy/root-boundary'
       Policies:
         - PolicyName: !Sub
@@ -347,7 +354,6 @@ Resources:
   EmailApiUser:
     Type: AWS::IAM::User
     Properties:
-      PermissionsBoundary: !Sub 'arn:aws:iam::${AWS::AccountId}:policy/root-boundary'
       Policies:
         - PolicyName: !Sub
             - '${Project}-pipeline'
@@ -371,7 +377,6 @@ Resources:
   InboundServiceUser:
     Type: AWS::IAM::User
     Properties:
-      PermissionsBoundary: !Sub 'arn:aws:iam::${AWS::AccountId}:policy/root-boundary'
       Policies:
         - PolicyName: !Sub
             - '${Project}-pipeline'
@@ -395,7 +400,6 @@ Resources:
   QueueApiUser:
     Type: AWS::IAM::User
     Properties:
-      PermissionsBoundary: !Sub 'arn:aws:iam::${AWS::AccountId}:policy/root-boundary'
       Policies:
         - PolicyName: !Sub
             - '${Project}-pipeline'
@@ -419,7 +423,6 @@ Resources:
   QueueServiceUser:
     Type: AWS::IAM::User
     Properties:
-      PermissionsBoundary: !Sub 'arn:aws:iam::${AWS::AccountId}:policy/root-boundary'
       Policies:
         - PolicyName: !Sub
             - '${Project}-pipeline'
@@ -443,7 +446,6 @@ Resources:
   UiUser:
     Type: AWS::IAM::User
     Properties:
-      PermissionsBoundary: !Sub 'arn:aws:iam::${AWS::AccountId}:policy/root-boundary'
       Policies:
         - PolicyName: !Sub
             - '${Project}-pipeline'
