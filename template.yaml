@@ -336,6 +336,10 @@ Resources:
                   - 's3:GetBucket*'
                   - 's3:List*'
                 Resource:
+                  - 'arn:aws:s3:::emails-ui-source/*'
+                  - 'arn:aws:s3:::emails-ui-source'
+                  - 'arn:aws:s3:::emails-ui-test/*'
+                  - 'arn:aws:s3:::emails-ui-test'
                   - !Sub 'arn:aws:s3:::${LambdaBucket}/*'
                   - !Sub 'arn:aws:s3:::${LambdaBucket}'
       RoleName: !FindInMap [EnvironmentMap, !Ref Environment, roleNamePipeline]
