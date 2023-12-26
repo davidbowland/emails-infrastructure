@@ -1,11 +1,10 @@
 {
   "name": "emails-infrastructure",
   "version": "1.11.0",
-  "private": true,
   "description": "Infrastructure for emails project",
   "author": "David Bowland",
   "engines": {
-    "node": "^18.0.0"
+    "node": "^20.0.0"
   },
   "repository": {
     "type": "git",
@@ -17,19 +16,18 @@
   "homepage": "https://github.com/davidbowland/emails-infrastructure#readme",
   "scripts": {
     "deploy": "./deploy.sh",
-    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then husky install ; fi",
+    "prepare": "husky",
     "lint": "prettier --write .",
     "update": "ncu --target minor --upgrade && npm audit fix --audit-level=none && npm dedupe"
+  },
+  "devDependencies": {
+    "husky": "^9.1.4",
+    "lint-staged": "^13.3.0",
+    "prettier": "^3.3.3"
   },
   "lint-staged": {
     "**/*": [
       "prettier --write --ignore-unknown"
     ]
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "husky": "^8.0.3",
-    "lint-staged": "^13.3.0",
-    "prettier": "^2.8.8"
   }
 }
