@@ -1,12 +1,13 @@
 name: Pipeline
 
 env:
+  GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
+  HUSKY: 0
+  PROD_PIPELINE_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/full-access
+  PROD_STACK_NAME: emails-infrastructure
   TEMPLATE_NAME: template.yaml
   TESTING_PIPELINE_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/full-access
   TESTING_STACK_NAME: emails-infrastructure-test
-  PROD_PIPELINE_EXECUTION_ROLE: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/full-access
-  PROD_STACK_NAME: emails-infrastructure
-  HUSKY: 0
 
 on: push
 
@@ -131,7 +132,7 @@ jobs:
 
       - name: Set git name and email
         run: |
-          git config --local user.email "dbowland1+bot@gmail.com"
+          git config --local user.email "${GIT_EMAIL}"
           git config --local user.name "github-actions[bot]"
       - name: Bump the minor version
         run: npm version minor
