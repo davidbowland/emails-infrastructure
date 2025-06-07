@@ -1,6 +1,6 @@
 {
   "name": "emails-infrastructure",
-  "version": "1.13.0",
+  "version": "1.14.0",
   "description": "Infrastructure for emails project",
   "author": "David Bowland",
   "engines": {
