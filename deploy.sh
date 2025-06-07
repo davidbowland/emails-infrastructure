@@ -10,7 +10,8 @@ fi
 # Deploy infrastructure
 
 sam deploy --stack-name emails-infrastructure-test \
-  --template-file template.yaml --region us-east-1 \
+  --template-file template.yaml \
+  --region us-east-1 \
   --capabilities CAPABILITY_NAMED_IAM \
   --no-fail-on-empty-changeset \
   --parameter-overrides Environment=test
